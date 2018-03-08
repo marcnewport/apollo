@@ -1,0 +1,19 @@
+{
+  "name": "twp-theme",
+  "version": "0.1.0",
+  "description": "",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "browser-sync": "^2.23.6",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-uglify": "^3.0.0",
+    "run-sequence": "^2.2.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "marc@theworkingparty.com.au",
+  "license": "ISC"
+}
