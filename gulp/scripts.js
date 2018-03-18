@@ -1,15 +1,15 @@
 const gulp = require('gulp');
-const uglify = require('gulp-uglify');
+const sourcemaps = require('gulp-sourcemaps');
 const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');
 
 gulp.task('scripts', function() {
-	// Add your scripts to array in order of dependancy
-	return gulp.src([
-			'src/scripts/*.js'
-		])
+	return gulp.src('src/assets/js/*.js')
+		.pipe(sourcemaps.init())
 		.pipe(babel({
 			presets:['es2015']
 		}))
 		.pipe(uglify())
+		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('dist/assets/'));
 });

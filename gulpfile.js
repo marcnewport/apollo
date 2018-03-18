@@ -1,21 +1,14 @@
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
 
-// Watches the constious files during development
-gulp.task('watch', ['clean', 'build', 'copyConfig', 'deploy', 'browserSync'], function () {
+gulp.task('watch', ['copyConfig', 'theme:watch', 'browserSync'], function () {
 
 	gulp.watch(
 		'src/scripts/**/*',
 		['scripts']
 	);
-
-	gulp.watch(
-		'dist/**/*!(.yml)',
-		['deploy', 'browserSync:reload']
-	);
 });
 
-// The default build command
 gulp.task('build', ['scripts']);
 
 // // The default dev command

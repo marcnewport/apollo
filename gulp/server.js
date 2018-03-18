@@ -11,11 +11,12 @@ gulp.task('browserSync', function() {
 	browserSync.init({
 		proxy: 'https://'+ config[env].store +'?preview_theme_id='+ config[env].theme_id,
 		host: 'localhost',
-		open: 'external'
+		open: 'external',
+		injectChanges: true,
+		reloadDebounce: 1000
 	});
-});
 
-// Reloads the browser
-gulp.task('browserSync:reload', ['deploy'], function() {
-	browserSync.reload();
+	gulp.watch('dist/**/*', function() {
+		browserSync.reload();
+	});
 });
