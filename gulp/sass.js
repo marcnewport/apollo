@@ -9,7 +9,7 @@ gulp.task('sass', function() {
 		.pipe(sourcemaps.init())
 		.pipe(sass())
 		.pipe(autoprefixer(
-			'last 2 versions', '> 5%', 'ie 10'
+			'last 2 versions', '> 5%', '>= IE 10'
 		))
 		.pipe(cssnano())
 		.pipe(sourcemaps.write('.'))

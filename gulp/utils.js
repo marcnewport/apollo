@@ -1,4 +1,3 @@
-const {env, config} = require('../gulpfile.js');
 const gulp = require('gulp');
 const clean = require('gulp-clean');
 
@@ -11,4 +10,4 @@ gulp.task('copyConfig', function() {
 gulp.task('clean', function() {
 	return gulp.src('dist', { read: false })
 		.pipe(clean());
-})
+});
