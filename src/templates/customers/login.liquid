@@ -1,0 +1,121 @@
+<div class="login page-width-narrow">
+
+  <div id="CustomerLoginForm">
+    {% form 'customer_login', class: 'form' %}
+
+      <div class="form__title">
+        {{ 'customer.login.title' | t }}
+      </div>
+
+      <div class="form-success hide" id="ResetSuccess">
+        {{ 'customer.recover_password.success' | t }}
+      </div>
+
+      {{ form.errors | default_errors }}
+
+      <div class="form__group">
+        <label for="CustomerEmail" class="label-hidden">
+          {{ 'customer.login.email' | t }}
+        </label>
+        <input type="email"
+               name="customer[email]"
+               id="CustomerEmail"
+               placeholder="{{ 'customer.login.email' | t }}"
+               class="{% if form.errors contains 'email' %}input-error{% endif %}"
+               spellcheck="false"
+               autocapitalize="off"
+               autofocus>
+      </div>
+
+      <div class="form__group">
+        {% if form.password_needed %}
+          <label for="CustomerPassword" class="label-hidden">
+            {{ 'customer.login.password' | t }}
+          </label>
+          <input type="password"
+                 name="customer[password]"
+                 placeholder="{{ 'customer.login.password' | t }}"
+                 id="CustomerPassword"
+                 class="{% if form.errors contains 'password' %}input-error{% endif %}">
+        {% endif %}
+      </div>
+
+      <div class="grid">
+        <div class="form__group grid__item medium-up--one-half">
+          <a href="/" class="btn">{{ 'customer.login.cancel' | t }}</a>
+        </div>
+        <div class="form__group grid__item medium-up--one-half">
+          <input type="submit" class="btn btn--primary" value="{{ 'customer.login.sign_in' | t }}">
+        </div>
+      </div>
+
+      <div class="login__links grid">
+        <div class="form__group grid__item medium-up--one-half">
+          <a href="/account/register">
+            {{ 'layout.customer.create_account' | t }}
+          </a>
+        </div>
+
+        {% if form.password_needed %}
+          <div class="form__group grid__item medium-up--one-half">
+            <a href="#recover" id="RecoverPassword">{{ 'customer.login.forgot_password' | t }}</a>
+          </div>
+        {% endif %}
+      </div>
+    {% endform %}
+  </div>
+
+  <div id="RecoverPasswordForm" class="hide">
+
+    {% form 'recover_customer_password', class: 'form' %}
+
+      <div class="form__title">
+        {{ 'customer.recover_password.title' | t }}
+      </div>
+      <div class="form__group">
+        <p>{{ 'customer.recover_password.subtext' | t }}</p>
+      </div>
+
+      {{ form.errors | default_errors }}
+
+      {% if form.posted_successfully? %}
+        <span class="hide reset-password-success"></span>
+      {% endif %}
+
+      <div class="form__group">
+        <label for="RecoverEmail" class="label-hidden">
+          {{ 'customer.recover_password.email' | t }}
+        </label>
+        <input type="email"
+               name="email"
+               id="RecoverEmail"
+               placeholder="{{ 'customer.recover_password.email' | t }}"
+               spellcheck="false"
+               autocomplete="off"
+               autocapitalize="off">
+      </div>
+
+      <div class="grid">
+        <div class="form__group grid__item medium-up--one-half">
+          <button type="button" class="btn" id="HideRecoverPasswordLink">
+            {{ 'customer.recover_password.cancel' | t }}
+          </button>
+        </div>
+        <div class="form__group grid__item medium-up--one-half">
+          <input type="submit" class="btn btn--primary" value="{{ 'customer.recover_password.submit' | t }}">
+        </div>
+      </div>
+    {% endform %}
+
+  </div>
+
+  {% if shop.checkout.guest_login %}
+    <div class="form__title">{{ 'customer.login.guest_title' | t }}</div>
+
+    {% form 'guest_login' %}
+      <div class="form__group">
+        <input type="submit" class="btn btn--primary" value="{{ 'customer.login.guest_continue' | t }}">
+      </div>
+    {% endform %}
+  {% endif %}
+</div>

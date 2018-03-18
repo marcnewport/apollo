@@ -1,0 +1,240 @@
+{% assign inner_classes = 'section__inner' %}
+{% if section.settings.contain_width %}
+  {% assign inner_classes = inner_classes | append: ' page-width' %}
+{% endif %}
+
+<div class="{{ inner_classes }}" data-section-id="{{ section.id }}" data-section-type="testimonials" data-section-settings='{{ section.settings | json }}'>
+  {%- if section.settings.title != blank -%}
+    <div class="section__title">
+      <h2 class="{{ section.settings.title_size }}">{{ section.settings.title }}</h2>
+    </div>
+  {%- endif -%}
+
+  <div class="section__content slider">
+
+    {%- for block in section.blocks -%}
+      <div class="testimonial" {{ block.shopify_attributes }}>
+        <blockquote class="testimonial__text">
+          {%- if block.settings.quote != blank -%}
+
+            <div class="rte">{{ block.settings.quote }}</div>
+
+          {%- endif -%}
+          {%- if block.settings.author != blank -%}
+
+            <cite>&mdash; {{ block.settings.author | escape }}</cite>
+
+          {%- endif -%}
+        </blockquote>
+      </div>
+    {%- endfor -%}
+
+  </div>
+</div>
+
+<style scoped>
+#shopify-section-{{ section.id }} {
+  {%- if section.settings.background_color != blank -%}
+    background-color: {{ section.settings.background_color }};
+  {%- endif -%}
+  {%- if section.settings.text_color != blank -%}
+    color: {{ section.settings.text_color }};
+  {%- endif -%}
+}
+
+{% if section.settings.text_color != blank %}
+#shopify-section-{{ section.id }} .section__title {
+  color: {{ section.settings.text_color }};
+}
+{%- endif -%}
+
+#shopify-section-{{ section.id }} blockquote {
+  {%- if section.settings.text_color != blank -%}
+    color: {{ section.settings.text_color }};
+  {%- endif -%}
+}
+
+/*
+Inserting variables here as a comment so shopify adds them to the linked settings
+$section-margin-top: {{ settings.section_margin }}rem;
+$section-margin-bottom: {{ settings.section_margin }}rem;
+$section-padding-top: {{ settings.section_padding }}rem;
+$section-padding-bottom: {{ settings.section_padding }}rem;
+ */
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "class": "section section--testimonials",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "contain_width",
+      "label": "Contain width",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "h4",
+      "options": [
+        {
+          "value": "feature-heading",
+          "label": "Feature heading"
+        },
+        {
+          "value": "h1",
+          "label": "Heading 1"
+        },
+        {
+          "value": "h2",
+          "label": "Heading 2"
+        },
+        {
+          "value": "h3",
+          "label": "Heading 3"
+        },
+        {
+          "value": "h4",
+          "label": "Heading 4"
+        },
+        {
+          "value": "h5",
+          "label": "Heading 5"
+        },
+        {
+          "value": "h6",
+          "label": "Heading 6"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "arrows",
+      "label": "Show arrows",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "dots",
+      "label": "Show dots",
+      "default":  true
+    },
+    {
+      "type": "checkbox",
+      "id": "fade",
+      "label": "Fade transition",
+      "default": false,
+      "info": "Only works when slides to show is set to 1"
+    },
+    {
+      "type": "range",
+      "id": "slidesToShow",
+      "label": "Slides to show",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "slidesToScroll",
+      "label": "Slides to scroll",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "slide_speed",
+      "label": "Speed",
+      "min": 100,
+      "max": 4000,
+      "step": 100,
+      "default": 2400,
+      "unit": "ms"
+    },
+    {
+      "type": "header",
+      "content": "Style settings"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot colour",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "Text",
+          "default": "<p>Add customer reviews and testimonials to showcase your store’s happy customers.</p>"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Author's name"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "category": "Text",
+      "blocks": [
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

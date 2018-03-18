@@ -1,5 +1,5 @@
 const test = {
-  thing: "hello world"
+  thing: "hello world!"
 }
 
 export test;

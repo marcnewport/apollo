@@ -1,0 +1,157 @@
+<ul class="nav nav--level-one">
+
+	{%- comment %}
+		Search icon
+	{% endcomment -%}
+	{% if section.settings.btn_search == "icon" %}
+
+		
+
+		<li class="nav__item">
+			<button class="header__btn header__btn--search">
+				{% include section.settings.search_text %}
+				{% include 'icon-close' %}
+				<span class="icon-fallback-text">Search</span>
+			</button>
+		</li>
+
+		
+
+	{% elsif section.settings.btn_search == "text" %}
+
+		<li class="nav__item">
+			<button class="header__btn header__btn--search">
+				{{ section.settings.search_text }}
+			</button>
+		</li>
+
+	{% endif %}
+
+
+
+	{%- comment %}
+		User icon
+	{% endcomment -%}
+	{% if section.settings.btn_user == "icon" and shop.customer_accounts_enabled %}
+
+		{% if settings.disable_user_create_account %}
+
+			<li class="nav__item">
+				{% if customer %}
+					<a href="/account" class="header__btn header__btn--user">
+						{% include 'icon-user' %}
+						<span class="icon-fallback-text">{{ 'layout.customer.account' | t }}</span>
+					</a>
+				{% else %}
+					<a href="/account/login" class="header__btn header__btn--user">
+						{% include 'icon-user-lock' %}
+						<span class="icon-fallback-text">{{ 'layout.customer.log_in' | t }}</span>
+					</a>
+				{% endif %}
+				
+			</li>
+
+		{% else %}
+
+		<li class="nav__item nav__item--has-child">
+			<button href="#" class="header__btn header__btn--user">
+				{% include section.settings.user_text %}
+				<span class="icon-fallback-text">User</span>
+			</button>
+
+			<div class="nav__dropdown nav__dropdown--user">
+				<div class="page-width">
+					<ul class="nav nav--level-two">
+						{% if customer %}
+
+						<li class="nav__item"><a href="/account">{{ 'layout.customer.account' | t }}</a></li>
+						<li class="nav__item">{{ 'layout.customer.log_out' | t | customer_logout_link }}</li>
+
+						{% else %}
+
+						<li class="nav__item">{{ 'layout.customer.log_in' | t | customer_login_link }}</li>
+						<li class="nav__item">{{ 'layout.customer.create_account' | t | customer_register_link }}</li>
+
+						{% endif %}
+
+					</ul>
+				</div>
+			</div>
+		</li>
+
+		{% endif %}
+
+	{% elsif section.settings.btn_user == "text" and shop.customer_accounts_enabled %}
+
+		{% if settings.disable_user_create_account %}
+
+			<li class="nav__item">
+				{% if customer %}
+					<a href="/account" class="header__btn header__btn--user">
+						{{ 'layout.customer.account' | t }}
+					</a>
+				{% else %}
+					<a href="/account/login" class="header__btn header__btn--user">
+						{{ 'layout.customer.log_in' | t  }}
+					</a>
+				{% endif %}
+			</li>
+		{% else %}
+		<li class="nav__item nav__item--has-child">
+				<button href="#" class="header__btn header__btn--user">
+					{% include section.settings.user_text %}
+				</button>
+
+				<div class="nav__dropdown nav__dropdown--user">
+					<div class="page-width">
+						<ul class="nav nav--level-two">
+							
+							{% if customer %}
+
+							<li class="nav__item"><a href="/account">{{ 'layout.customer.account' | t }}</a></li>
+							<li class="nav__item">{{ 'layout.customer.log_out' | t | customer_logout_link }}</li>
+
+							{% else %}
+
+							<li class="nav__item">{{ 'layout.customer.log_in' | t | customer_login_link }}</li>
+							<li class="nav__item">{{ 'layout.customer.create_account' | t | customer_register_link }}</li>
+
+							{% endif %}
+
+						</ul>
+					</div>
+				</div>
+			</li>	
+		{% endif %}
+
+	{% endif %}
+
+
+
+	{%- comment %}
+		Cart icon
+	{% endcomment -%}
+	{% if section.settings.btn_cart == "icon" %}
+
+		<li class="nav__item">
+			<a href="/cart" class="header__btn header__btn--cart js__cart-toggle" role="button">
+				{% include section.settings.cart_text %}
+				<span class="icon-fallback-text">Cart {{ cart.item_count }}</span>
+
+				<span class="cart-count" {% if cart.item_count == 0 %}style="display: none;"{% endif %}>{{ cart.item_count }}</span>
+	    </a>
+		</li>
+
+	{% elsif section.settings.btn_cart == "text" %}
+
+		<li class="nav__item">
+			<a href="/cart" class="header__btn header__btn--cart js__cart-toggle" role="button">
+				{{ section.settings.cart_text }}
+
+				<span class="cart-count" {% if cart.item_count == 0 %}style="display: none;"{% endif %}>{{ cart.item_count }}</span>
+
+			</a>
+		</li>
+
+	{% endif %}
+</ul>

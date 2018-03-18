@@ -1,0 +1,28 @@
+<div class="article-card{% if type %} article-card--{{ type }}{% endif %}">
+
+  {% if article.image != blank %}
+  <div class="article-card__image">
+    <a href="{{ article.url | within: collection }}">
+      {%- include 'banner-image', src: article.image.src, alt: article.image.alt -%}
+    </a>
+  </div>
+  {% endif %}
+
+  <div class="article-card__title">
+    <a href="{{ article.url }}">
+      {{ article.title }}
+    </a>
+  </div>
+
+  <div class="article-card__details">
+    Posted by <span class="article-card__author">{{ article.author }}</span>
+    on {{ article.created_at | time_tag: format: 'month_day_year' }}
+  </div>
+
+  {%- if article.excerpt != blank -%}
+  <div class="article-card__excerpt rte">
+    {{ article.excerpt }}
+  </div>
+  {%- endif -%}
+
+</div>

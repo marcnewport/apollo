@@ -1,0 +1,207 @@
+<div class="product" data-section-id="{{ section.id }}" data-section-type="product" data-enable-history-state="true">
+
+  {%- assign current_variant = product.selected_or_first_available_variant -%}
+  {%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
+
+  <div class="grid">
+
+    <div class="grid__item medium-up--two-thirds">
+
+      {% if product.images.size > 1 %}
+        <div class="product__thumbnails">
+          {% for image in product.images %}
+            <div class="product__thumbnail">
+              <img src="{{ image.src | img_url: 'master' }}" alt="{{ image.alt | escape }}">
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if featured_image != blank %}
+        <div class="product__image">
+          {% for image in product.images %}
+            <div class="product__image-slide">
+              <div class="product__image-container" style='background-image:url("{{ image.src | img_url: 'master' }}")'>
+                <img src="{{ image.src | img_url: 'master' }}" alt="{{ image.alt | escape }}">
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    </div>
+
+    <div class="grid__item medium-up--one-third">
+
+      <div class="product__title">
+        <h1>{{ product.title }}</h1>
+      </div>
+
+      <div class="product__price h2" data-price-wrapper>
+        <span data-product-price>{{ current_variant.price | money }}</span>
+
+        {% if product.compare_at_price_max > product.price %}
+          <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+          <s data-compare-price>
+            {% if current_variant.compare_at_price > current_variant.price %}
+              {{ current_variant.compare_at_price | money }}
+            {% endif %}
+          </s>
+        {% endif %}
+      </div>
+
+      <div class="product__description rte">
+        {{ product.description }}
+      </div>
+
+      <form action="/cart/add" method="post" enctype="multipart/form-data" class="product__form form">
+        <div class="grid">
+          {% unless product.has_only_default_variant %}
+            {% for option in product.options_with_values %}
+              <div class="grid__item one-half js">
+                <label for="SingleOptionSelector-{{ forloop.index0 }}">
+                  {{ option.name }}
+                </label>
+
+                <select
+                  id="SingleOptionSelector-{{ forloop.index0 }}"
+                  data-single-option-selector
+                  data-index="option{{ option.position }}">
+                  {% for value in option.values %}
+                    <option
+                      value="{{ value | escape }}"
+                      {% if option.selected_value == value %}selected="selected"{% endif %}>
+                        {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% endfor %}
+          {% endunless %}
+
+          <select name="id" class="no-js" data-product-select>
+            {% for variant in product.variants %}
+              <option
+                {% if variant == current_variant %}selected="selected"{% endif %}
+                {% unless variant.available %}disabled="disabled"{% endunless %}
+                value="{{ variant.id }}">
+                  {{ variant.title }}
+              </option>
+            {% endfor %}
+          </select>
+
+          <div class="grid__item one-half">
+            <label for="Quantity">{{ 'products.product.quantity' | t }}</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1">
+          </div>
+
+
+          <div class="grid__item one-whole">
+            <button
+              class="btn btn--primary"
+              type="submit"
+              name="add"
+              data-add-to-cart
+              {% unless current_variant.available %}disabled="disabled"{% endunless %}>
+                <span data-add-to-cart-text>
+                  {% if current_variant.available %}
+                    {{ 'products.product.add_to_cart' | t }}
+                  {% else %}
+                    {{ 'products.product.sold_out' | t }}
+                  {% endif %}
+                </span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'accordion' and block.settings.title != blank and block.settings.body != blank -%}
+
+          {% capture accordions %}
+            {{ accordions }}
+
+            <div class="panel collapsed">
+              <div class="panel__heading" role="heading">
+                <button data-toggle="panel-{{ forloop.index }}" aria-controls="panel-{{ forloop.index }}">{{ block.settings.title }}</button>
+              </div>
+              <div id="panel-{{ forloop.index }}" class="panel__body" role="region">
+                <div class="panel__body-inner">{{ block.settings.body }}</div>
+              </div>
+            </div>
+          {% endcapture %}
+
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if accordions != blank -%}
+        <div class="accordion">
+          {{ accordions }}
+        </div>
+      {%- endif -%}
+
+      {% if section.settings.show_share_buttons %}
+        {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product %}
+      {% endif %}
+    </div>
+
+  </div>
+
+  {%- if section.settings.show_related_products -%}
+    {%- include 'related-products' -%}
+  {%- endif -%}
+
+  {%- if section.settings.show_recently_viewed -%}
+    {%- include 'recently-viewed-products' -%}
+  {%- endif -%}
+
+  {% unless product == empty %}
+    <script type="application/json" data-product-json>
+      {{ product | json }}
+    </script>
+  {% endunless %}
+</div>
+
+{% schema %}
+  {
+    "name": "Product pages",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_share_buttons",
+        "label": "Show social sharing buttons",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_related_products",
+        "label": "Show related products",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_recently_viewed",
+        "label": "Show recently viewed products",
+        "default": false
+      }
+    ],
+    "blocks": [
+      {
+        "type": "accordion",
+        "name": "Accordion",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "body",
+            "label": "Body"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

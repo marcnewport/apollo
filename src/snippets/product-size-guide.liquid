@@ -1,0 +1,37 @@
+{%- comment %}
+  Attempt to match one of the product collection handles with a page handle prefixed with size-guide
+  eg. hoodies == size-guide-hoodies ?
+{% endcomment -%}
+{%- for p_collection in product.collections -%}
+  {% assign has_size_guide = false %}
+  {% assign size_guide_handle = 'size-guide-' | append: p_collection.handle %}
+
+  {%- if pages[size_guide_handle].content != blank -%}
+    <div class="product-size-guide">
+      <div class="accordion">
+        <div class="accordion-toggle"><h4>Size guide</h4></div>
+        <div class="accordion-content">
+          {{ pages[size_guide_handle].content }}
+        </div>
+      </div>
+    </div>
+    {% assign has_size_guide = true %}
+    {% break %}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment %}
+  If no specific size guide was found, use the generic one found at /pages/size-guide
+{% endcomment -%}
+{%- unless has_size_guide -%}
+  {%- if pages['size-guide'].content != blank -%}
+    <div class="product-size-guide">
+      <div class="accordion">
+        <div class="accordion-toggle"><h4>Size guide</h4></div>
+        <div class="accordion-content">
+          {{ pages['size-guide'].content }}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endunless -%}

@@ -1,0 +1,73 @@
+{%- if src_mobile != blank or src_desktop != blank -%}
+  {%- if is_pjpg -%}
+
+    <picture {% if class %}class="{{ class }}"{% endif %}>
+
+      {%- if src_mobile != blank -%}
+
+        {% assign mobile = settings.grid_small | append: 'x' %}
+        {% assign mobile_retina = settings.grid_small | times: 2 | append: 'x' %}
+
+        <source media="(max-width: {{ settings.grid_small }}px)"
+                srcset="{{ src_mobile | img_url: mobile, format: 'pjpg' }} {{ settings.grid_small }}w,
+                        {{ src_mobile | img_url: mobile_retina, format: 'pjpg' }} {{ settings.grid_small | times: 2 }}w">
+
+      {%- endif -%}
+
+      {%- if src_desktop != blank -%}
+
+        {% assign medium = settings.grid_medium | append: 'x' %}
+        {% assign large = settings.grid_large | append: 'x' %}
+        {% assign widescreen = settings.grid_widescreen | append: 'x' %}
+
+        <source media="(min-width: {{ settings.grid_small | plus: 1 }}px)"
+                srcset="{{ src_desktop | img_url: medium, format: 'pjpg' }} {{ settings.grid_medium }}w,
+                        {{ src_desktop | img_url: large, format: 'pjpg' }} {{ settings.grid_large }}w,
+                        {{ src_desktop | img_url: widescreen, format: 'pjpg' }} {{ settings.grid_widescreen }}w">
+      {%- endif -%}
+
+      {%- comment %} fallback image {% endcomment -%}
+      {%- if src_desktop != blank -%}
+        <img src="{{ src_desktop | img_url: 'master', format: 'pjpg' }}" alt="{{ alt }}">
+      {%- elsif src_mobile != blank -%}
+        <img src="{{ src_mobile | img_url: 'master', format: 'pjpg' }}" alt="{{ alt }}">
+      {%- endif -%}
+    </picture>
+
+  {%- else -%}
+
+    <picture {% if class %}class="{{ class }}"{% endif %}>
+
+      {%- if src_mobile != blank -%}
+
+        {% assign mobile = settings.grid_small | append: 'x' %}
+        {% assign mobile_retina = settings.grid_small | times: 2 | append: 'x' %}
+
+        <source media="(max-width: {{ settings.grid_small }}px)"
+                srcset="{{ src_mobile | img_url: mobile }} {{ settings.grid_small }}w,
+                        {{ src_mobile | img_url: mobile_retina }} {{ settings.grid_small | times: 2 }}w">
+
+      {%- endif -%}
+
+      {%- if src_desktop != blank -%}
+
+        {% assign medium = settings.grid_medium | append: 'x' %}
+        {% assign large = settings.grid_large | append: 'x' %}
+        {% assign widescreen = settings.grid_widescreen | append: 'x' %}
+
+        <source media="(min-width: {{ settings.grid_small | plus: 1 }}px)"
+                srcset="{{ src_desktop | img_url: medium }} {{ settings.grid_medium }}w,
+                        {{ src_desktop | img_url: large }} {{ settings.grid_large }}w,
+                        {{ src_desktop | img_url: widescreen }} {{ settings.grid_widescreen }}w">
+      {%- endif -%}
+
+      {%- comment %} fallback image {% endcomment -%}
+      {%- if src_desktop != blank -%}
+        <img src="{{ src_desktop | img_url: 'master' }}" alt="{{ alt }}">
+      {%- elsif src_mobile != blank -%}
+        <img src="{{ src_mobile | img_url: 'master' }}" alt="{{ alt }}">
+      {%- endif -%}
+    </picture>
+
+  {%- endif -%}
+{%- endif -%}

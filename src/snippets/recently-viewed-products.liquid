@@ -1,0 +1,58 @@
+<div class="recently-viewed">
+  <div class="recently-viewed__title">Recently viewed</div>
+  <div class="recently-viewed__container grid grid--uniform"></div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Keep track of recently viewed products
+  var limit = 6;
+  var productHandle = '{{ product.handle }}';
+  var $container = jQuery('.recently-viewed__container');
+  var storage = localStorage.getItem('recentlyViewedProducts') || '[]';
+  var recentProducts = JSON.parse(storage);
+  var productIndex = recentProducts.indexOf(productHandle);
+  var inArray = productIndex > -1;
+
+  // Check if current item is in the array, and move it to the front
+  if (inArray) {
+    recentProducts.splice(productIndex, 1);
+  }
+
+  // Add current product to the start of the array
+  recentProducts.unshift(productHandle);
+  // Cut the array down so we dont store a humungous amount of data
+  recentProducts = recentProducts.splice(0, (limit * 2));
+  localStorage.setItem('recentlyViewedProducts', JSON.stringify(recentProducts));
+
+  // Start at 1 so we dont print the current product
+  var index = 1;
+  var markup = '';
+
+  // Make the ajax request or prints out markup on completion
+  var getNextProduct = function() {
+    // Have we hit the limit?
+    if (recentProducts[index] && index <= limit) {
+      var url = '/products/'+ recentProducts[index] +'?view=recently-viewed';
+
+      jQuery.get(url, function(data) {
+        markup += data;
+        index++;
+        getNextProduct();
+      });
+    }
+    else {
+      $container.html(markup);
+    }
+  };
+
+  // Check we got some products to show
+  if (recentProducts.length > index) {
+    getNextProduct();
+  }
+  else {
+    $container.parent().hide();
+  }
+});
+</script>

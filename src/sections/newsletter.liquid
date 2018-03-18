@@ -1,0 +1,207 @@
+{% assign inner_classes = 'section__inner' %}
+{% if section.settings.contain_width %}
+  {% assign inner_classes = inner_classes | append: ' page-width' %}
+{% endif %}
+
+<div class="{{ inner_classes }}" data-section-id="{{ section.id }}" data-section-type="newsletter">
+  {%- if section.settings.title != blank -%}
+    <div class="section__title">
+      <h2 class="{{ section.settings.title_size }}">{{ section.settings.title }}</h2>
+    </div>
+  {%- endif -%}
+
+  <div class="section__content">
+
+    {%- if section.settings.content != blank -%}
+      {{ section.settings.content }}
+    {%- endif -%}
+
+    {%- form 'customer', class: 'form' -%}
+
+    {{ form.errors | default_errors }}
+
+    {%- if form.posted_successfully? -%}
+      <p class="form--success">{{ 'general.newsletter_form.confirmation' | t }}</p>
+    {%- else -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+
+      <div class="grid">
+        <div class="form__group grid__item medium-up--three-quarters">
+          <input type="email"
+                 name="contact[email]"
+                 id="Email"
+                 class="input-group__field newsletter__input"
+                 value="{% if customer %}{{ customer.email }}{% endif %}"
+                 placeholder="{{ section.settings.placeholder }}"
+                 autocorrect="off"
+                 autocapitalize="off">
+        </div>
+
+        <div class="grid__item medium-up--one-quarter">
+          <button type="submit" class="btn btn--primary newsletter__submit" name="commit" id="Subscribe">
+            <span>{{ section.settings.label }}</span>
+          </button>
+        </div>
+      </div>
+    {%- endif -%}
+    {%- endform -%}
+  </div>
+</div>
+
+<style scoped>
+#shopify-section-{{ section.id }} {
+  {%- if section.settings.background_color != blank -%}
+    background-color: {{ section.settings.background_color }};
+  {%- endif -%}
+  {%- if section.settings.text_color != blank -%}
+    color: {{ section.settings.text_color }};
+  {%- endif -%}
+}
+
+{% if section.settings.text_color != blank %}
+#shopify-section-{{ section.id }} .section__title {
+  color: {{ section.settings.text_color }};
+}
+{%- endif -%}
+
+#shopify-section-{{ section.id }} .section__inner {
+  max-width: {{ section.settings.width }}px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: {{ section.settings.text_align }};
+}
+
+#shopify-section-{{ section.id }} .newsletter__submit {
+  min-width: 100%;
+}
+
+/*
+Inserting variables here as a comment so shopify adds them to the linked settings
+$section-margin-top: {{ settings.section_margin }}rem;
+$section-margin-bottom: {{ settings.section_margin }}rem;
+$section-padding-top: {{ settings.section_padding }}rem;
+$section-padding-bottom: {{ settings.section_padding }}rem;
+ */
+</style>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "class": "section section--newsletter",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "contain_width",
+      "label": "Contain width",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "width",
+      "label": "Width",
+      "default": 600,
+      "min": 300,
+      "max": 1000,
+      "step": 10,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Subscribe to our newsletter"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "h4",
+      "options": [
+        {
+          "value": "feature-heading",
+          "label": "Feature heading"
+        },
+        {
+          "value": "h1",
+          "label": "Heading 1"
+        },
+        {
+          "value": "h2",
+          "label": "Heading 2"
+        },
+        {
+          "value": "h3",
+          "label": "Heading 3"
+        },
+        {
+          "value": "h4",
+          "label": "Heading 4"
+        },
+        {
+          "value": "h5",
+          "label": "Heading 5"
+        },
+        {
+          "value": "h6",
+          "label": "Heading 6"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content",
+      "default": "<p>A short sentence describing what someone will receive by subscribing.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Text align",
+      "default": "center",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder text",
+      "default": "Email address"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Button label",
+      "default": "Subscribe"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shopify newsletter",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

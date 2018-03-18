@@ -1,0 +1,182 @@
+<div class="page-width">
+
+  <header class="collection__header" role="banner">
+    {%- if collection.image != blank -%}
+      {%- include 'banner-image', src: collection.image.src -%}
+    {%- endif -%}
+
+    <h1 class="page-title">{{ collection.title }}</h1>
+
+    {%- if collection.description != blank -%}
+      <div class="collection__description rte">
+        {{ collection.description }}
+      </div>
+    {%- endif -%}
+  </header>
+
+  <div id="app" class="collection__content" v-cloak>
+
+    <div v-if="products.length" class="grid">
+
+      <div class="filter filter--{{ section.settings.filter_layout }} grid__item medium-up--one-fifth">
+
+        {%- comment %}
+          Sort
+        {% endcomment -%}
+        <div class="filter__control filter__control--sort filter__control--expanded">
+          <div class="filter__label">
+            <label for="sort_by">
+              Sort +
+            </label>
+          </div>
+
+          <div class="filter__list form">
+            {% raw %}
+            <select v-model="sortBy" id="sort_by" name="sort_by">
+              <option value="created_asc">Newest to Oldest</option>
+              <option value="created_desc">Oldest to Newest</option>
+              <option value="title_asc">Title (a-z)</option>
+              <option value="title_desc">Title (z-a)</option>
+              <option value="price_asc">Price (lowest - highest)</option>
+              <option value="price_desc">Price (highest - lowest)</option>
+            </select>
+            {% endraw %}
+          </div>
+        </div>
+
+        {%- comment %}
+          Product Type
+        {% endcomment -%}
+        <div class="filter__control filter__control--type">
+          <div class="filter__label" v-on:click="filterClickHandler">
+            Product Type +
+          </div>
+
+          <div class="filter__list">
+            <ul>
+              <li v-for="type in productTypes">
+                {% raw %}
+                <label>
+                  <input type="checkbox" v-model="selectedTypes" :value="type">
+                  {{ type }}
+                </label>
+                {% endraw %}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {%- comment %}
+          Vendor
+        {% endcomment -%}
+        <div class="filter__control filter__control--type">
+          <div class="filter__label" v-on:click="filterClickHandler">
+            Vendor +
+          </div>
+
+          <div class="filter__list">
+            <ul>
+              <li v-for="vendor in productVendors">
+                {% raw %}
+                <label>
+                  <input type="checkbox" v-model="selectedVendors" :value="vendor">
+                  {{ vendor }}
+                </label>
+                {% endraw %}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {%- comment %}
+          Tags
+        {% endcomment -%}
+        <div v-for="(value, key) in tags" class="filter__control filter__control--tags">
+          <div class="filter__label" v-on:click="filterClickHandler">
+            {% raw %}{{ key }}{% endraw %} +
+          </div>
+
+          <div class="filter__list">
+            <ul>
+              <li v-for="tag in value">
+                {% raw %}
+                <label>
+                  <input type="checkbox" v-model="selectedTags[key]" :value="tag">
+                  {{ tag }}
+                </label>
+                {% endraw %}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- end filter -->
+
+      <div class="collection__products grid__item medium-up--four-fifths">
+        <div class="grid grid--uniform">
+          <div v-for="product in paginatedProducts" class="grid__item small--one-whole medium-up--one-quarter">
+
+            <div class="product-card">
+              {% raw %}
+              <div class="product-card__image">
+                <a v-bind:href="product.onlineStoreUrl">
+                  <img v-bind:src="productImage(product)" alt="">
+                </a>
+              </div>
+
+              <div class="product-card__title">
+                <a v-bind:href="product.onlineStoreUrl">
+                  {{ product.title }}
+                </a>
+              </div>
+              <div class="product-card__price" v-text="formatMoney(product.variants[0].price)"></div>
+              {% endraw %}
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- end collection -->
+
+    </div><!-- end outer grid -->
+
+    <div class="pagination">
+      {% raw %}
+      <ul>
+        <li v-if="currentPage > 1">
+          <button v-on:click="updatePage(currentPage - 1)"><</button>
+        </li>
+
+        <template v-if="isPaginationStart">
+          <li>
+            <button v-on:click="updatePage(1)">1</button>
+          </li>
+          <li v-if="needsStartElipsis">...</li>
+        </template>
+
+        <li v-for="page in totalPages" v-if="inRange(page, currentPage, 3)" v-bind:class="[page === currentPage ? 'active' : '']">
+          <button v-on:click="updatePage(page)">{{ page }}</button>
+        </li>
+
+        <template v-if="isPaginationEnd">
+          <li v-if="needsEndElipsis">...</li>
+          <li>
+            <button v-on:click="updatePage(totalPages)">{{ totalPages }}</button>
+          </li>
+        </template>
+
+        <li v-if="currentPage < totalPages">
+          <button v-on:click="updatePage(currentPage + 1)">></button>
+        </li>
+      </ul>
+      {% endraw %}
+    </div><!-- end pagination -->
+
+    <div v-if="! products.length" class="loading">
+      {% raw %}{{ showStatus }}{% endraw %}
+    </div>
+  </div><!-- end app -->
+</div>
+
+<!-- Include the collection filter script -->
+<script src="{{ 'collection-filter.js' | asset_url }}" defer="defer"></script>

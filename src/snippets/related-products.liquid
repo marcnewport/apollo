@@ -1,0 +1,37 @@
+{%- comment %}
+	Related products are collections that start with the name Related eg. "Related Pants"
+  If the current product is in a collection starting with Related it will show the other items in that collection
+{% endcomment -%}
+
+{% for col in product.collections %}
+    {%- if col.handle contains 'related-' -%}
+      {% assign related_collection = col %}
+      {% break %}
+    {%- endif -%}
+{% endfor %}
+
+{%- if related_collection.title != blank -%}
+
+  <div class="related-products">
+    <h2 class="related-products__title">Related products</h2>
+    <div class="related-products__container grid">
+
+      {% assign product_id = product.id %}
+      {% assign count = 0 %}
+      {% assign max = 4 %}
+
+      {%- for product in related_collection.products -%}
+        {%- if product_id != product.id and count < max -%}
+
+          <div class="grid__item one-quarter">
+            {%- include 'product-card', type: 'related' -%}
+          </div>
+
+          {% assign count = count | plus: 1 %}
+        {%- endif -%}
+      {%- endfor -%}
+
+    </div>
+  </div>
+
+{%- endif -%}

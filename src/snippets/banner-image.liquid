@@ -1,0 +1,26 @@
+{% assign small = settings.grid_small | append: 'x' %}
+{% assign medium = settings.grid_medium | append: 'x' %}
+{% assign large = settings.grid_large | append: 'x' %}
+{% assign widescreen = settings.grid_widescreen | append: 'x' %}
+
+{%- if settings.is_pjpg -%}
+
+  <img src="{{ src | img_url: 'master' }}"
+       alt="{{ alt }}"
+       {% if class %}class="{{ class }}"{% endif %}
+       srcset="{{ src | img_url: small, format: 'pjpg' }} {{ settings.grid_small }}w,
+               {{ src | img_url: medium, format: 'pjpg' }} {{ settings.grid_medium }}w,
+               {{ src | img_url: large, format: 'pjpg' }} {{ settings.grid_large }}w,
+               {{ src | img_url: widescreen, format: 'pjpg' }} {{ settings.grid_widescreen }}w">
+
+{%- else -%}
+
+  <img src="{{ src | img_url: 'master' }}"
+       alt="{{ alt }}"
+       {% if class %}class="{{ class }}"{% endif %}
+       srcset="{{ src | img_url: small }} {{ settings.grid_small }}w,
+               {{ src | img_url: medium }} {{ settings.grid_medium }}w,
+               {{ src | img_url: large }} {{ settings.grid_large }}w,
+               {{ src | img_url: widescreen }} {{ settings.grid_widescreen }}w">
+
+{%- endif -%}

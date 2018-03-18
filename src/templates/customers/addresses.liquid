@@ -1,0 +1,24 @@
+<div class="page-width">
+
+  <h1 class="page-title">{{ 'customer.account.title' | t }}</h1>
+
+  <div class="customer customer-addresses">
+
+    <ul class="customer__navigation">
+      <li><a href="/account">Order history</a></li>
+      <li><a href="/account/addresses" class="active">Addresses</a></li>
+    </ul>
+
+    <div class="customer__main">
+      <a href="#customers-new-address-form" class="btn btn--primary customer__btn-new-address">
+        Add address
+      </a>
+
+      {%- include 'customers-addresses' -%}
+
+      <div class="remodal" data-remodal-id="customers-new-address-form">
+        {%- include 'customers-new-address-form' -%}
+      </div>
+    </div>
+  </div>
+</div>

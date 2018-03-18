@@ -1,0 +1,25 @@
+<div class="search search--modal">
+	<div class="search__inner">
+		<div class="page-width">
+			<div class="search__form">
+
+				<form action="/search" method="get" role="search">
+
+						<input type="search" name="q" id="Search" placeholder="{{ 'general.search.placeholder' | t }}" value="{{ search.terms | escape | remove: '*' }}">
+
+						<button type="submit" class="header__btn header__btn--search-submit">
+							{% include 'icon-search' %}
+							<span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span>
+						</button>
+				</form>
+
+			</div>
+
+			<div class="search__results">
+				<div class="grid">
+					<!-- results go here -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

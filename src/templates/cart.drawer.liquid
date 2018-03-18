@@ -1,0 +1,57 @@
+{% layout none %}
+
+{% for item in cart.items %}
+
+	<div class="cart-item">
+    <div class="cart-item__inner">
+
+      <div class="cart-item__image">
+        <a href="{{ item.url | within: collections.all }}">
+          <img src="{{ item | img_url: '150x150', crop: 'center' }}" alt="{{ item.title | escape }}">
+        </a>
+      </div>
+
+      <div class="cart-item__content">
+
+        <div class="cart-item__title">
+          <a href="{{ item.url }}">{{ item.product.title }}</a>
+        </div>
+
+        {% unless item.product.has_only_default_variant %}
+        <div class="cart-item__description">
+          {{ item.variant.title }}
+        </div>
+        {% endunless %}
+
+        <div class="cart-item__quantity quantity">
+          {% if item.quantity > 0 %}
+            <a href="/cart/change?line={{ forloop.index }}&amp;quantity={{ item.quantity | minus: 1 }}" class="quantity__control quantity__control--minus" data-line="{{ forloop.index0 }}">
+              {%- include 'icon-minus' -%}
+            </a>
+          {% endif %}
+
+          <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0" aria-label="{{ 'cart.general.item_quantity' | t }}" class="quantity__amount" readonly>
+
+          {%- if item.variant.inventory_management == 'shopify'
+             and item.variant.inventory_policy == 'deny'
+             and item.quantity >= item.variant.inventory_quantity -%}
+
+             <span title="No more stock" class="quantity__control quantity__control--plus quantity__control--disabled">
+               {%- include 'icon-plus' -%}
+             </span>
+          {%- else -%}
+            <a href="/cart/change?line={{ forloop.index }}&amp;quantity={{ item.quantity | plus: 1 }}" class="quantity__control quantity__control--plus" data-line="{{ forloop.index0 }}">
+              {%- include 'icon-plus' -%}
+            </a>
+          {%- endif -%}
+        </div>
+
+        <div class="cart-item__price money">
+          {{ item.price | money }}
+        </div>
+
+      </div>
+    </div>
+	</div>
+
+{% endfor %}

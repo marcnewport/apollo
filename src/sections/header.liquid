@@ -1,0 +1,345 @@
+<div class="header" data-section-id="{{ section.id }}" data-section-type="header" data-fixed="">
+	<header role="banner" class="header__wrapper">
+
+		<div class="header__main">
+			<div class="page-width">
+				<div class="header__inner">
+
+					<button class="header__btn header__btn--menu hamburger">
+						<span class="line line--one"></span>
+						<span class="line line--two"></span>
+						<span class="line line--three"></span>
+						<span class="icon-fallback-text">Menu</span>
+					</button>
+
+					<div class="header__title">
+						<h1>
+							<a href="/">
+                {%- if section.settings.logo_svg != blank -%}
+
+								  {{ section.settings.logo_svg }}
+
+								{%- elsif section.settings.logo != blank -%}
+
+									<img src="{{ section.settings.logo | img_url: 'master' }}" alt="{{ shop.name }}">
+
+								{%- else -%}
+
+		              {{ shop.name }}
+
+								{%- endif -%}
+							</a>
+						</h1>
+					</div>
+
+					<div class="header__buttons">
+						{%- include 'header-buttons' -%}
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="header__navigation">
+			<div class="page-width">
+				<div class="header__inner">
+
+					<div class="header__search">
+						<form action="/search" method="get" role="search">
+
+								<input type="search" name="q" id="Search" placeholder="{{ 'general.search.placeholder' | t }}" value="{{ search.terms | escape | remove: '*' }}">
+
+								<button type="submit" class="header__btn header__btn--search-submit">
+									{% include 'icon-search' %}
+									<span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span>
+								</button>
+						</form>
+					</div>
+
+					{%- include 'header-navigation' -%}
+
+					{% if shop.customer_accounts_enabled %}
+						<div class="header__account">
+							{% if customer  %}
+								<a href="/account" class="btn btn--primary"><span>My account</span></a>
+								<a href="/account/logout" class="btn btn--secondary"><span>Log out</span></a>
+							{% else %}
+								<a href="/account/register" class="btn btn--primary"><span>Sign up</span></a>
+								<a href="/account/login" class="btn btn--secondary"><span>Log in</span></a>
+							{% endif %}
+						</div>
+					{% endif %}
+
+				</div>
+			</div>
+		</div>
+	</header>
+</div>
+
+{%- include 'search-modal' -%}
+
+
+
+<style scoped>
+{%- if section.settings.fixed -%}
+  .header-fixed #shopify-section-header {
+    padding-bottom: {{ section.settings.header_height }}px;
+  }
+
+  .header-fixed .header,
+  .header-fixed .search--modal {
+  	position: fixed;
+  }
+
+  {%- if section.settings.drop_shadow -%}
+  	.header-fixed .header,
+  	.search--modal {
+  		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.01),
+  								0 2px 2px rgba(0, 0, 0, 0.01),
+  								0 3px 3px rgba(0, 0, 0, 0.01),
+  								0 4px 4px rgba(0, 0, 0, 0.01),
+  								0 5px 5px rgba(0, 0, 0, 0.01);
+  	}
+
+  	@media only screen and (min-width: {{ settings.grid_large }}px) {
+  		.header__navigation .nav__dropdown,
+      .nav__dropdown--user .nav--level-two {
+  			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.01),
+  									inset 0 2px 2px rgba(0, 0, 0, 0.01),
+  									inset 0 3px 3px rgba(0, 0, 0, 0.01),
+  									inset 0 4px 4px rgba(0, 0, 0, 0.01),
+  									inset 0 5px 5px rgba(0, 0, 0, 0.01),
+  									0 1px 1px rgba(0, 0, 0, 0.01),
+  									0 2px 2px rgba(0, 0, 0, 0.01),
+  									0 3px 3px rgba(0, 0, 0, 0.01),
+  									0 4px 4px rgba(0, 0, 0, 0.01),
+  									0 5px 5px rgba(0, 0, 0, 0.01);
+  		}
+  	}
+  {%- endif -%}
+{%- endif -%}
+
+.header__main .header__inner {
+	height: {{ section.settings.header_height }}px;
+}
+
+.header__title img,
+.header__title svg {
+	width: {{ section.settings.logo_width }}px;
+  max-height: {{ section.settings.header_height }}px;
+}
+
+/* Mobile */
+@media only screen and (max-width: {{ settings.grid_large | minus: 1 }}px) {
+	.header__navigation .header__inner {
+		margin-top: {{ section.settings.header_height }}px;
+	}
+}
+
+/* Desktop */
+@media only screen and (min-width: {{ settings.grid_large }}px) {
+
+	.header__navigation {
+		margin-top: -{{ section.settings.header_height }}px;
+	}
+
+	.header__navigation .header__inner {
+		height: {{ section.settings.header_height }}px;
+	}
+
+	.header__navigation nav {
+		margin-left: {{ section.settings.logo_width }}px;
+	}
+
+	.nav__dropdown {
+		top: {{ section.settings.header_height }}px;
+	}
+}
+
+/*
+Inserting variables here as a comment so shopify adds them to the linked settings
+$color-header-text: {{ settings.color_header_text }};
+$color-header-bg: {{ settings.color_header_bg }};
+$color-dropdown-text: {{ settings.color_dropdown_text }};
+$color-dropdown-bg: {{ settings.color_dropdown_bg }};
+$color-cart-count-bg: {{ settings.color_cart_count_bg }};
+$color-cart-count-text: {{ settings.color_cart_count_text }};
+$header-logo-spacing: {{ settings.header_logo_spacing }}rem;
+$header-nav-spacing: {{ settings.header_nav_spacing }}rem;
+$header-btn-spacing: {{ settings.header_btn_spacing }}rem;
+$header-list-spacing: {{ settings.header_list_spacing }}rem;
+ */
+</style>
+
+
+
+{% schema %}
+{
+	"name": "Header",
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "fixed",
+			"label": "Fixed header",
+			"default": true
+		},
+		{
+			"type": "image_picker",
+			"id": "logo",
+			"label": "Logo image"
+		},
+		{
+			"type": "html",
+			"id": "logo_svg",
+			"label": "Logo svg"
+		},
+		{
+			"type": "range",
+			"id": "logo_width",
+			"min": 10,
+			"max": 400,
+			"step": 5,
+			"unit": "px",
+			"label": "Logo max width",
+			"default": 250
+		},
+		{
+			"type": "link_list",
+			"id": "main_linklist",
+			"label": "Menu",
+			"default": "main-menu"
+		},
+		{
+			"type": "range",
+			"id": "header_height",
+			"min": 20,
+			"max": 200,
+			"step": 5,
+			"unit": "px",
+			"label": "Header height",
+			"default": 100
+		},
+		{
+			"type": "checkbox",
+			"id": "drop_shadow",
+			"label": "Enable drop shadow",
+			"default": false
+		},
+		{
+			"type": "checkbox",
+			"id": "show_column_titles",
+			"label": "Show column titles",
+			"default": false
+		},
+		{
+			"type": "header",
+			"content": "Button icons"
+		},
+		{
+			"type": "select",
+			"id": "btn_search",
+			"label": "Search Button",
+			"default": "icon",
+			"options": [
+				{
+					"value": "icon",
+					"label": "Icon"
+				},
+				{
+					"value": "text",
+					"label": "Text"
+				},
+				{
+					"value": "none",
+					"label": "None"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "search_text",
+			"label": "Search Input",
+			"default": "icon-search",
+			"info": "Input an icon or text e.g. icon = icon-search or text = Search"
+		},
+		{
+			"type": "select",
+			"id": "btn_user",
+			"label": "User Button",
+			"default": "icon",
+			"options": [
+				{
+					"value": "icon",
+					"label": "Icon"
+				},
+				{
+					"value": "text",
+					"label": "Text"
+				},
+				{
+					"value": "none",
+					"label": "None"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "user_text",
+			"label": "User Input",
+			"default": "icon-user",
+			"info": "Input an icon or text e.g. icon = icon-user or text = User"
+		},
+		{
+			"type": "select",
+			"id": "btn_cart",
+			"label": "Cart Button",
+			"default": "icon",
+			"options": [
+				{
+					"value": "icon",
+					"label": "Icon"
+				},
+				{
+					"value": "text",
+					"label": "Text"
+				},
+				{
+					"value": "none",
+					"label": "None"
+				}
+			]
+		},
+		{
+			"type": "text",
+			"id": "cart_text",
+			"label": "Cart Input",
+			"default": "icon-cart",
+			"info": "Input an icon or text e.g. icon = icon-cart or text = Cart"
+		}
+	],
+	"blocks": [
+		{
+			"type": "menu_item",
+			"name": "Menu item settings",
+			"settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Menu label",
+          "info": "eg. Shop by type"
+        },
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				},
+				{
+					"type": "url",
+					"id": "image_link",
+					"label": "Image link"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

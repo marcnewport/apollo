@@ -1,0 +1,157 @@
+{% assign inner_classes = 'section__inner' %}
+{% if section.settings.contain_width %}
+  {% assign inner_classes = inner_classes | append: ' page-width' %}
+{% endif %}
+
+<div class="{{ inner_classes }}" data-section-id="{{ section.id }}" data-section-type="featured-collection">
+  {%- if section.settings.title != blank -%}
+    <div class="section__title">
+      <h2 class="{{ section.settings.title_size }}">{{ section.settings.title }}</h2>
+    </div>
+  {%- endif -%}
+
+  <div class="section__content">
+
+    <div class="grid grid--uniform">
+
+      {%- capture grid_class -%}
+        {%- if section.settings.max_products == 1 -%}
+          one-whole
+        {%- elsif section.settings.max_products == 2 -%}
+          small--one-whole medium-up--one-half
+        {%- elsif section.settings.max_products == 3 -%}
+          small--one-whole medium-up--one-third
+        {%- elsif section.settings.max_products == 4 -%}
+          small--one-whole medium-up--one-quarter
+        {%- elsif section.settings.max_products == 5 -%}
+          small--one-whole medium-up--one-fifth
+        {%- elsif section.settings.max_products == 6 -%}
+          small--one-whole medium-up--one-sixth
+        {%- endif -%}
+      {%- endcapture -%}
+
+      {%- for product in collections[section.settings.collection].products -%}
+
+        <div class="grid__item {{ grid_class }}">
+          {%- include 'product-card' -%}
+        </div>
+
+        {% if forloop.index >= section.settings.max_products %}
+          {% break %}
+        {% endif %}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style scoped>
+#shopify-section-{{ section.id }} {
+  {%- if section.settings.background_color != blank -%}
+    background-color: {{ section.settings.background_color }};
+  {%- endif -%}
+  {%- if section.settings.text_color != blank -%}
+    color: {{ section.settings.text_color }};
+  {%- endif -%}
+}
+
+{% if section.settings.text_color != blank %}
+#shopify-section-{{ section.id }} .section__title {
+  color: {{ section.settings.text_color }};
+}
+{%- endif -%}
+
+/*
+Inserting variables here as a comment so shopify adds them to the linked settings
+$section-margin-top: {{ settings.section_margin }}rem;
+$section-margin-bottom: {{ settings.section_margin }}rem;
+$section-padding-top: {{ settings.section_padding }}rem;
+$section-padding-bottom: {{ settings.section_padding }}rem;
+ */
+</style>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "class": "section section--featured-collection",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "contain_width",
+      "label": "Contain width",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "h4",
+      "options": [
+        {
+          "value": "feature-heading",
+          "label": "Feature heading"
+        },
+        {
+          "value": "h1",
+          "label": "Heading 1"
+        },
+        {
+          "value": "h2",
+          "label": "Heading 2"
+        },
+        {
+          "value": "h3",
+          "label": "Heading 3"
+        },
+        {
+          "value": "h4",
+          "label": "Heading 4"
+        },
+        {
+          "value": "h5",
+          "label": "Heading 5"
+        },
+        {
+          "value": "h6",
+          "label": "Heading 6"
+        }
+      ]
+    },
+    {
+      "id": "collection",
+      "type": "collection",
+      "label": "Collection",
+      "info": "Edit the collection above to update sort order"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Max products to show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

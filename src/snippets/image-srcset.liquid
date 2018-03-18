@@ -1,0 +1,9 @@
+{% assign small = settings.grid_small | append: 'x' %}
+{% assign medium = settings.grid_medium | append: 'x' %}
+{% assign large = settings.grid_large | append: 'x' %}
+{% assign widescreen = settings.grid_widescreen | append: 'x' %}
+
+{{ src | img_url: small }} {{ settings.grid_small }}w,
+{{ src | img_url: medium }} {{ settings.grid_medium }}w,
+{{ src | img_url: large }} {{ settings.grid_large }}w,
+{{ src | img_url: widescreen }} {{ settings.grid_widescreen }}w
