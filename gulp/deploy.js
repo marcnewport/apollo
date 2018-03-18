@@ -10,16 +10,16 @@ gulp.task('theme:watch', function() {
 	},
 	function(error, stdout, stderr)  {
 	  if (error) return console.error(error);
-	  console.log(stdout);
-	});
+	})
+	.stdout.pipe(process.stdout);
 });
 
-gulp.task('theme:deploy', ['build'], function() {
+gulp.task('theme:deploy', function() {
 	exec('theme upload -e '+ env, {
 		cwd: 'dist/'
 	},
 	function(error, stdout, stderr)  {
 	  if (error) return console.error(error);
-	  console.log(stdout);
-	});
+	})
+	.stdout.pipe(process.stdout);
 });

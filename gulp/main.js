@@ -20,6 +20,7 @@ gulp.task('build', function(done) {
 		'scripts',
 		'sass',
 		'liquid',
+		'copyConfig',
 		done
 	);
 });
@@ -27,7 +28,6 @@ gulp.task('build', function(done) {
 gulp.task('deploy', function(done) {
 	runSequence(
 		'build',
-		'copyConfig',
 		'theme:deploy',
 		done
 	);
