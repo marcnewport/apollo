@@ -12,6 +12,7 @@ gulp.task('browserSync', function() {
 		host: 'localhost',
 		open: 'external',
 		injectChanges: true,
+		reloadDelay: 1000,
 		reloadDebounce: 1000
 	});
 
