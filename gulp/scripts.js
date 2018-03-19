@@ -1,9 +1,13 @@
 const gulp = require('gulp');
+const glob = require('glob');
+const browserify = require('browserify');
+const babelify = require('babelify');
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
 const sourcemaps = require('gulp-sourcemaps');
-const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 
-const presets = {
+const settings = {
 	"presets": [
 		[
 			"env", {
@@ -16,10 +20,22 @@ const presets = {
 };
 
 gulp.task('scripts', function() {
-	return gulp.src('src/assets/js/*.js')
-		.pipe(sourcemaps.init())
-		.pipe(babel(presets))
-		.pipe(uglify())
-		.pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest('dist/assets/'));
+
+	const files = glob.sync('src/assets/js/*.js');
+
+	return files.forEach(function(file) {
+		browserify({ entries: file })
+	        .transform(babelify.configure({ presets: ['env'] }))
+	        .bundle()
+			.on('error', function (err) {
+				console.error(err.toString());
+				this.emit("end");
+			})
+			.pipe(source(file.replace('src/assets/js/', '')))
+			.pipe(buffer())
+	        .pipe(sourcemaps.init())
+	        .pipe(uglify())
+	        .pipe(sourcemaps.write('.'))
+			.pipe(gulp.dest('dist/assets/'));
+	})
 });
